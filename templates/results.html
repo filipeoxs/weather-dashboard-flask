@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+    <title>Weather {{city}}</title>
+</head>
+<body>
+    <div id="results">
+        <h4>Weather of {{city}}</h4>
+        <label for="max_temp">Max Temperature</label>
+        <input type="text" name="max_temp" id="max_temp" value="{{max_temp}}°" readonly>
+        <label for="min_temp">Min Temperature</label>
+        <input type="text" name="min_temp" id="min_temp" value="{{min_temp}}°" readonly>
+        <label for="min_temp">Actual Temperature</label>
+        <input type="text" name="temp" id="temp" value="{{temp}}°" readonly>
+        <label for="min_temp">Humidity</label>
+        <input type="humidity" name="humidity" id="humidity" value="{{humidity}}%" readonly>
+        <label for="min_temp">Feels Like</label>
+        <input type="text" name="feels_like" id="feels_like" value="{{feels_like}}°" readonly>
+        <label for="min_temp">Weather Description</label>
+        <input type="text" name="weather_description" id="weather_description" value="{{weather_description}}" readonly>
+        <a href="{{url_for('index')}}" id="button">Back</a>
+    </div>
+    <footer>
+        <h4>Desenvolvido por Filipe Castro</h4>
+        <h6>Weather Dashboard</h6>
+        <p>Python - Flask</p>
+    </footer>
+</body>
+</html>
