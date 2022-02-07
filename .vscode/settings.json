@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/2123b35c-99c0-4447-bf9c-a7c036984553/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/weather-dashboard",
+    "appService.deploySubpath": "."
+}
