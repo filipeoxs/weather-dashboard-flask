@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 import requests
 import json
+import configparser
+
 
 app = Flask(__name__)
 
@@ -8,9 +10,10 @@ class WeatherService:
     """
     Responsável por obter os dados do serviço de clima.
     """
-
+    config = configparser.ConfigParser()
+    config.read('config.ini')
     BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
-    API_KEY = "sua_chave_de_api_aqui"
+    API_KEY = config['openweathermap']['api']
 
     def get_weather(self, city):
         """
