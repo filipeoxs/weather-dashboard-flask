@@ -1,25 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
-    <title>Get Weather Flask</title>
-</head>
-
-<body>
-    <form action="/results" method="POST">
-        <h4>Weather Dashboard</h4>
-        <label for="inputCity">City</label>
-        <input type="text" name="city" id="city" placeholder="City...">
-        <input type="submit" value="Submit" id="button">
+<html>
+  <head>
+    <title>Weather Dashboard Flask</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  </head>
+  <body>
+    <h1>Weather Dashboard Flask</h1>
+    <form method="POST" action="/">
+      <label for="city">Digite o nome da cidade:</label>
+      <input type="text" id="city" name="city" required>
+      <button type="submit">Consultar</button>
     </form>
-    <footer>
-        <h4>Desenvolvido por Filipe Castro</h4>
-        <h6>Weather Dashboard</h6>
-        <p>Python - Flask</p>
-    </footer>
-</body>
+    {% if data %}
+    <div class="weather-card">
+      <h2>{{ data['name'] }}, {{ data['sys']['country'] }}</h2>
+      <p>Temperatura: {{ data['main']['temp'] }}°C</p>
+      <p>Umidade: {{ data['main']['humidity'] }}%</p>
+      <p>Pressão: {{ data['main']['pressure'] }} hPa</p>
+      <p>Condição: {{ data['weather'][0]['description'] }}</p>
+    </div>
+    {% elif error %}
+    <div class="error-message">
+      <p>{{ error }}</p>
+    </div>
+    {% endif %}
+  </body>
 </html>
