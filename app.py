@@ -1,40 +1,53 @@
-import configparser
+from flask import Flask, render_template, request
 import requests
-from flask import Flask, render_template,request
+import json
 
 app = Flask(__name__)
 
-def get_api_key():
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    return config['openweathermap']['api']
+class WeatherService:
+    """
+    Responsável por obter os dados do serviço de clima.
+    """
 
-def get_weather(cep, API_KEY):
-    api_call = f'http://api.openweathermap.org/data/2.5/weather?q={cep}&units=metric&appid={API_KEY}'
-    r = requests.get(api_call)
-    return r.json()
+    BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
+    API_KEY = "sua_chave_de_api_aqui"
 
-@app.route('/', methods=['GET'])
+    def get_weather(self, city):
+        """
+        Obtém os dados do clima da cidade especificada.
+        """
+        url = f"{self.BASE_URL}?q={city}&appid={self.API_KEY}&units=metric"
+        response = requests.get(url)
+        data = json.loads(response.content)
+
+        return data
+
+class WeatherController:
+    """
+    Responsável por receber as requisições do usuário e entregar as respostas correspondentes.
+    """
+
+    def __init__(self, service):
+        self.service = service
+
+    def handle_request(self, request):
+        """
+        Lida com a requisição do usuário.
+        """
+        city = request.form.get("city")
+        data = self.service.get_weather(city)
+
+        return render_template("index.html", data=data)
+
+weather_service = WeatherService()
+weather_controller = WeatherController(weather_service)
+
+@app.route("/", methods=["GET", "POST"])
 def index():
-    return render_template('index.html')
-   
-@app.route('/results', methods=['POST','GET'])
-def results():
-    city=request.form['city']
-    if city !='':
-        data = get_weather(city, get_api_key())
-        temp = "{0:.1f}".format(data["main"]["temp"])
-        min_temp = "{0:.1f}".format(data["main"]["temp_min"])
-        max_temp = "{0:.1f}".format(data["main"]["temp_max"])
-        humidity = "{0:.0f}".format(data["main"]["humidity"])
-        feels_like = "{0:.1f}".format(data["main"]["feels_like"])
-        weather_description = dict(data["weather"][0])["description"]
-        if request.method == 'POST':
-            return render_template('results.html', temp=temp,min_temp = min_temp, max_temp = max_temp,
-                                humidity=humidity, feels_like=feels_like, weather_description=weather_description,city=city)
-        else:
-            return render_template('index.html')
-    else:
-        return 'There was no city with the name informed registered in our database. Please, try again.'
+    if request.method == "GET":
+        return render_template("index.html")
+    elif request.method == "POST":
+        return weather_controller.handle_request(request)
+
 if __name__ == "__main__":
     app.run(debug=True)
